@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const BENCHMARK_FILE = path.join(__dirname, 'benchmarks.json');
+const BENCHMARK_FILE = path.join(__dirname, 'performanceTestResult.json');
 
 async function main() {
   console.log('Running Planet Archeologist...');

@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 
 const CSV_PATH = path.join(__dirname, 'planetary_systems.csv');
 const QUERIES_PATH = path.join(__dirname, 'queries.sql');
-const BENCHMARK_FILE = path.join(__dirname, 'benchmarks.json');
+const BENCHMARK_FILE = path.join(__dirname, 'performanceTestResult.json');
 
 function getGitCommit() {
   try {
@@ -41,8 +41,9 @@ async function runBenchmark() {
     const queryName = `Query ${i + 1}`;
     const timings = [];
 
-    // Warmup
-    alasql(query, [records]);
+    // Warmup & Get Row Count
+    const warmupRes = alasql(query, [records]);
+    const rowCount = warmupRes.length;
 
     for (let j = 0; j < iterations; j++) {
       const start = performance.now();
@@ -55,8 +56,8 @@ async function runBenchmark() {
     const sorted = timings.sort((a, b) => a - b);
     const p99 = sorted[Math.floor(sorted.length * 0.99)];
     
-    results[queryName] = { avg, p99 };
-    console.log(`${queryName}: Avg=${avg.toFixed(2)}ms, P99=${p99.toFixed(2)}ms`);
+    results[queryName] = { avg, p99, rows: rowCount };
+    console.log(`${queryName}: Avg=${avg.toFixed(2)}ms, P99=${p99.toFixed(2)}ms, Rows=${rowCount}`);
   }
 
   // Save to history

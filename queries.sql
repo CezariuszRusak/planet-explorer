@@ -17,7 +17,7 @@ ORDER BY sy_snum DESC, pl_orbper ASC;
 
 -- Query 3: The "Kepler's Legacy" Stats
 -- Count planets discovered by year and method.
-SELECT disc_year, discoverymethod, COUNT(*) as planet_count 
+SELECT disc_year, discoverymethod, SUM(LEN(pl_name) * LEN(hostname)) as complexity
 FROM ? 
 GROUP BY disc_year, discoverymethod 
-ORDER BY disc_year DESC, planet_count DESC;
+ORDER BY complexity DESC;
